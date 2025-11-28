@@ -125,6 +125,23 @@ agencies-insights/
 - **Responsive design** : Compatible mobile et desktop
 - **Animations fluides** : Expérience utilisateur moderne
 
+## 🚀 Déploiement
+
+### Déploiement sur Vercel (Recommandé)
+
+1. **Poussez votre code sur GitHub**
+```bash
+git add .
+git commit -m "Initial commit"
+git push origin main
+```
+
+2. **Déployez sur Vercel**
+   - Allez sur [vercel.com](https://vercel.com)
+   - Importez votre repository GitHub
+   - Configurez les variables d'environnement
+   - Déployez !
+
 ## 🖥️ Démo
 
 * **La page des contacts :**
