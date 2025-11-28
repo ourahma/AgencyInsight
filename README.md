@@ -192,4 +192,4 @@ Pour toute question ou problème :
 
 ---
 
-**Développé avec ❤️ en utilisant Next.js et Clerk**
+**OURAHMA Maroua 🤍**
