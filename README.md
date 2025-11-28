@@ -127,7 +127,7 @@ agencies-insights/
 
 ## 🚀 Déploiement
 
-### Déploiement sur Vercel (Recommandé)
+### Déploiement sur Netlify 
 
 1. **Poussez votre code sur GitHub**
 ```bash
@@ -137,7 +137,7 @@ git push origin main
 ```
 
 2. **Déployez sur Vercel**
-   - Allez sur [vercel.com](https://vercel.com)
+   - Allez sur [vercel.com](https://netlify.com)
    - Importez votre repository GitHub
    - Configurez les variables d'environnement
    - Déployez !
