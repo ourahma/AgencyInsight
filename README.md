@@ -30,6 +30,10 @@
 - Vue d'ensemble de l'activité
 - Compteurs de données (agences, contacts, consultations)
 
+## 📖 Documentation :
+
+![](screenshots/classe.png)
+
 ## 🛠️ Technologies Utilisées
 
 - **Frontend**: Next.js 14 avec App Router
