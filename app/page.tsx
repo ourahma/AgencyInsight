@@ -1,4 +1,3 @@
-// app/page.tsx
 "use client";
 
 import { SignedIn, SignedOut, RedirectToSignIn, useUser } from "@clerk/nextjs";

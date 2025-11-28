@@ -5,15 +5,16 @@ import { usePathname } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import { NavbarProps } from "../types";
 import {
   DashboardIcon,
   BuildingIcon,
   UsersIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-} from "../components/Icons"; // Nous créerons ce fichier
+} from "../components/Icons"; 
 
-export default function Navbar({ collapsed, setCollapsed }) {
+export default function Navbar({ collapsed, setCollapsed }:NavbarProps) {
   const pathname = usePathname();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -241,10 +242,10 @@ export default function Navbar({ collapsed, setCollapsed }) {
                   transition={{ duration: 0.2 }}
                 >
                   <p className="text-sm font-semibold text-gray-900 truncate">
-                    {user.firstName} {user.lastName}
+                    {user?.firstName} {user?.lastName}
                   </p>
                   <p className="text-xs text-gray-500 truncate">
-                    {user.primaryEmailAddress?.emailAddress.split("@")[0]}
+                    {user?.primaryEmailAddress?.emailAddress.split("@")[0]}
                   </p>
                 </motion.div>
               )}
@@ -253,7 +254,7 @@ export default function Navbar({ collapsed, setCollapsed }) {
             {/* UserButton */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <UserButton
-                afterSignOutUrl="/"
+                afterSignOutUrl="/login"
                 appearance={{
                   elements: {
                     avatarBox: "w-8 h-8 border-2 border-indigo-200",

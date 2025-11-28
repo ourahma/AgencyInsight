@@ -1,4 +1,3 @@
-// app/agencies/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -38,25 +37,23 @@ export default function AgenciesPage() {
           header: true,
           skipEmptyLines: true,
           dynamicTyping: true,
-          complete: (results) => {
+          complete: (results: { data: Record<string, unknown>[] }) => {
             const parsedAgencies: AgencyWithDetails[] = results.data
-              .map((row: any) => ({
-                id: row.id || "",
-                name: row.name?.trim() || "",
-                city: row.state?.trim() || "",
-                address: (
-                  row.physical_address ||
-                  row.mailing_address ||
-                  ""
-                )?.trim(),
-                phone: row.phone?.trim() || "",
-                state_code: row.state_code?.trim() || "",
-                type: row.type?.trim() || "",
-                population: row.population || null,
-                website: row.website?.trim() || "",
-                county: row.county?.trim() || "",
-                created_at: row.created_at || "",
-                updated_at: row.updated_at || "",
+              .map((row: Record<string, unknown>) => ({
+                id: String(row.id || ""),
+                name: String(row.name || "").trim(),
+                city: String(row.state || "").trim(),
+                address: String(
+                  row.physical_address || row.mailing_address || ""
+                ).trim(),
+                phone: String(row.phone || "").trim(),
+                state_code: String(row.state_code || "").trim(),
+                type: String(row.type || "").trim(),
+                population: row.population ? Number(row.population) : undefined, // Changez null en undefined
+                website: String(row.website || "").trim(),
+                county: String(row.county || "").trim(),
+                created_at: String(row.created_at || ""),
+                updated_at: String(row.updated_at || ""),
               }))
               .filter((agency) => agency.name && agency.id);
 
@@ -64,13 +61,13 @@ export default function AgenciesPage() {
             setFilteredAgencies(parsedAgencies);
             setLoading(false);
           },
-          error: (error) => {
+          error: (error:unknown) => {
             console.error("Erreur lors du parsing CSV:", error);
             setError("Erreur lors de la lecture du fichier CSV");
             setLoading(false);
           },
         });
-      } catch (err) {
+      } catch (err : unknown) {
         console.error("Erreur lors du chargement des agences:", err);
         setError(err instanceof Error ? err.message : "Erreur inconnue");
         setLoading(false);
@@ -182,122 +179,21 @@ export default function AgenciesPage() {
   return (
     <div className="min-h-screen  p-8">
       <main className="min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Liste des Agences
-          </h1>
-          <p className="text-gray-600">
-            Gérez et consultez toutes vos agences avec détails complets
-          </p>
-        </div>
-
-        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 mb-6 border border-white/20">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative">
-              <svg
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              <input
-                type="text"
-                placeholder="Rechercher..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-              />
-            </div>
-
-            <div className="relative">
-              <svg
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                />
-              </svg>
-              <select
-                value={selectedState}
-                onChange={(e) => setSelectedState(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all appearance-none bg-white"
-              >
-                <option value="all">Tous les états</option>
-                {uniqueStates.map((state) => (
-                  <option key={state} value={state}>
-                    {state}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="relative">
-              <svg
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                />
-              </svg>
-              <select
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all appearance-none bg-white"
-              >
-                <option value="all">Tous les types</option>
-                {uniqueTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              Liste des Agences
+            </h1>
+            <p className="text-gray-600">
+              Gérez et consultez toutes vos agences avec détails complets
+            </p>
           </div>
 
-          <div className="mt-4 flex items-center justify-between text-sm">
-            <span className="text-gray-600">
-              <span className="font-semibold text-indigo-600">
-                {filteredAgencies.length}
-              </span>{" "}
-              agence{filteredAgencies.length > 1 ? "s" : ""} trouvée
-              {filteredAgencies.length > 1 ? "s" : ""}
-              {searchTerm || selectedState !== "all" || selectedType !== "all"
-                ? ` sur ${agencies.length} au total`
-                : ""}
-            </span>
-            {(searchTerm ||
-              selectedState !== "all" ||
-              selectedType !== "all") && (
-              <button
-                onClick={() => {
-                  setSearchTerm("");
-                  setSelectedState("all");
-                  setSelectedType("all");
-                }}
-                className="text-indigo-600 hover:text-indigo-700 font-medium flex items-center"
-              >
+          <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 mb-6 border border-white/20">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="relative">
                 <svg
-                  className="w-4 h-4 mr-1"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -306,146 +202,171 @@ export default function AgenciesPage() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                   />
                 </svg>
-                Réinitialiser
-              </button>
-            )}
-          </div>
-        </div>
+                <input
+                  type="text"
+                  placeholder="Rechercher..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                />
+              </div>
 
-        {filteredAgencies.length === 0 ? (
-          <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-12 text-center border border-white/20">
-            <svg
-              className="w-16 h-16 text-gray-400 mx-auto mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-              />
-            </svg>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Aucune agence trouvée
-            </h3>
-            <p className="text-gray-600">
-              Essayez de modifier vos critères de recherche
-            </p>
+              <div className="relative">
+                <svg
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                  />
+                </svg>
+                <select
+                  value={selectedState}
+                  onChange={(e) => setSelectedState(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all appearance-none bg-white"
+                >
+                  <option value="all">Tous les états</option>
+                  {uniqueStates.map((state) => (
+                    <option key={state} value={state}>
+                      {state}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="relative">
+                <svg
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                  />
+                </svg>
+                <select
+                  value={selectedType}
+                  onChange={(e) => setSelectedType(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all appearance-none bg-white"
+                >
+                  <option value="all">Tous les types</option>
+                  {uniqueTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center justify-between text-sm">
+              <span className="text-gray-600">
+                <span className="font-semibold text-indigo-600">
+                  {filteredAgencies.length}
+                </span>{" "}
+                agence{filteredAgencies.length > 1 ? "s" : ""} trouvée
+                {filteredAgencies.length > 1 ? "s" : ""}
+                {searchTerm || selectedState !== "all" || selectedType !== "all"
+                  ? ` sur ${agencies.length} au total`
+                  : ""}
+              </span>
+              {(searchTerm ||
+                selectedState !== "all" ||
+                selectedType !== "all") && (
+                <button
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedState("all");
+                    setSelectedType("all");
+                  }}
+                  className="text-indigo-600 hover:text-indigo-700 font-medium flex items-center"
+                >
+                  <svg
+                    className="w-4 h-4 mr-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                  Réinitialiser
+                </button>
+              )}
+            </div>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAgencies.map((agency, index) => (
-              <div
-                key={agency.id}
-                className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 overflow-hidden group cursor-pointer"
-                style={{ animationDelay: `${index * 50}ms` }}
-                onClick={() => setSelectedAgency(agency)}
+
+          {filteredAgencies.length === 0 ? (
+            <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-12 text-center border border-white/20">
+              <svg
+                className="w-16 h-16 text-gray-400 mx-auto mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex-shrink-0 h-12 w-12 bg-white/20 backdrop-blur-lg rounded-xl flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">
-                        {agency.name.charAt(0).toUpperCase()}
-                      </span>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                />
+              </svg>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Aucune agence trouvée
+              </h3>
+              <p className="text-gray-600">
+                Essayez de modifier vos critères de recherche
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredAgencies.map((agency, index) => (
+                <div
+                  key={agency.id}
+                  className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 overflow-hidden group cursor-pointer"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                  onClick={() => setSelectedAgency(agency)}
+                >
+                  <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex-shrink-0 h-12 w-12 bg-white/20 backdrop-blur-lg rounded-xl flex items-center justify-center">
+                        <span className="text-white font-bold text-lg">
+                          {agency.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      {agency.type && (
+                        <span className="px-3 py-1 bg-white/20 backdrop-blur-lg rounded-full text-xs font-semibold text-white">
+                          {agency.type}
+                        </span>
+                      )}
                     </div>
-                    {agency.type && (
-                      <span className="px-3 py-1 bg-white/20 backdrop-blur-lg rounded-full text-xs font-semibold text-white">
-                        {agency.type}
-                      </span>
-                    )}
+                    <h3 className="text-xl font-bold text-white mb-1 line-clamp-2 group-hover:text-yellow-200 transition-colors">
+                      {agency.name}
+                    </h3>
+                    <p className="text-indigo-100 text-sm">{agency.city}</p>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-1 line-clamp-2 group-hover:text-yellow-200 transition-colors">
-                    {agency.name}
-                  </h3>
-                  <p className="text-indigo-100 text-sm">{agency.city}</p>
-                </div>
 
-                <div className="p-6 space-y-3">
-                  {agency.state_code && (
-                    <div className="flex items-center text-sm">
-                      <svg
-                        className="w-4 h-4 text-indigo-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      <span className="text-gray-700 font-medium">
-                        {agency.state_code}
-                      </span>
-                    </div>
-                  )}
-
-                  {agency.county && (
-                    <div className="flex items-center text-sm">
-                      <svg
-                        className="w-4 h-4 text-indigo-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                        />
-                      </svg>
-                      <span className="text-gray-600 text-sm">
-                        {agency.county}
-                      </span>
-                    </div>
-                  )}
-
-                  {agency.population && (
-                    <div className="flex items-center text-sm">
-                      <svg
-                        className="w-4 h-4 text-indigo-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                        />
-                      </svg>
-                      <span className="text-gray-600 text-sm">
-                        {formatPopulation(agency.population)} habitants
-                      </span>
-                    </div>
-                  )}
-
-                  {agency.website && (
-                    <div className="pt-2">
-                      <a
-                        href={agency.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 font-medium"
-                      >
+                  <div className="p-6 space-y-3">
+                    {agency.state_code && (
+                      <div className="flex items-center text-sm">
                         <svg
-                          className="w-4 h-4 mr-1"
+                          className="w-4 h-4 text-indigo-500 mr-2"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -454,20 +375,96 @@ export default function AgenciesPage() {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                           />
                         </svg>
-                        Visiter le site
-                      </a>
-                    </div>
-                  )}
+                        <span className="text-gray-700 font-medium">
+                          {agency.state_code}
+                        </span>
+                      </div>
+                    )}
+
+                    {agency.county && (
+                      <div className="flex items-center text-sm">
+                        <svg
+                          className="w-4 h-4 text-indigo-500 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                          />
+                        </svg>
+                        <span className="text-gray-600 text-sm">
+                          {agency.county}
+                        </span>
+                      </div>
+                    )}
+
+                    {agency.population && (
+                      <div className="flex items-center text-sm">
+                        <svg
+                          className="w-4 h-4 text-indigo-500 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
+                        </svg>
+                        <span className="text-gray-600 text-sm">
+                          {formatPopulation(agency.population)} habitants
+                        </span>
+                      </div>
+                    )}
+
+                    {agency.website && (
+                      <div className="pt-2">
+                        <a
+                          href={agency.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                        >
+                          <svg
+                            className="w-4 h-4 mr-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
+                          </svg>
+                          Visiter le site
+                        </a>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-        </main>
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
       {/* Modal de détails */}
       {selectedAgency && (
         <div

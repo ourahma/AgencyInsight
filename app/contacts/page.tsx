@@ -1,11 +1,9 @@
-// app/contacts/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { ContactWithDetails } from "../types";
 import Papa from "papaparse";
-import  Navbar  from "../components/Navbar";
 export default function ContactsPage() {
   const { userId } = useAuth();
   const [contacts, setContacts] = useState<ContactWithDetails[]>([]);
@@ -62,22 +60,22 @@ export default function ContactsPage() {
           header: true,
           skipEmptyLines: true,
           dynamicTyping: true,
-          complete: (results) => {
+          complete: (results: { data: Record<string, unknown>[] }) => {
             const parsed: ContactWithDetails[] = results.data
-              .map((row: any) => ({
-                id: row.id || "",
-                firstName: row.first_name?.trim() || "",
-                lastName: row.last_name?.trim() || "",
-                email: row.email?.trim() || "",
-                phone: row.phone?.trim() || "",
-                title: row.title?.trim() || "",
-                agencyId: row.agency_id?.trim() || "",
-                department: row.department?.trim() || "",
-                email_type: row.email_type?.trim() || "",
-                contact_form_url: row.contact_form_url?.trim() || "",
-                firm_id: row.firm_id?.trim() || "",
-                created_at: row.created_at || "",
-                updated_at: row.updated_at || "",
+              .map((row: Record<string, unknown>) => ({
+                id: String(row.id || ""),
+                firstName: String(row.first_name || "").trim(),
+                lastName: String(row.last_name || "").trim(),
+                email: String(row.email || "").trim(),
+                phone: String(row.phone || "").trim(),
+                title: String(row.title || "").trim(),
+                agencyId: String(row.agency_id || "").trim(),
+                department: String(row.department || "").trim(),
+                email_type: String(row.email_type || "").trim(),
+                contact_form_url: String(row.contact_form_url || "").trim(),
+                firm_id: String(row.firm_id || "").trim(),
+                created_at: String(row.created_at || ""),
+                updated_at: String(row.updated_at || ""),
               }))
               .filter((c) => c.firstName && c.lastName && c.id);
             setContacts(parsed);

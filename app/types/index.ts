@@ -5,11 +5,11 @@ export interface Agency {
   address?: string;
   phone?: string;
 }
-// Vous pouvez ajouter d'autres types liés si nécessaire
+
 export interface AgencyWithDetails extends Agency {
   state_code?: string;
   type?: string;
-  population?: number;
+  population?: number | null;
   website?: string;
   county?: string;
   created_at?: string;
@@ -22,7 +22,7 @@ export interface AgencyCSVRow {
   state: string;
   state_code?: string;
   type?: string;
-  population?: number;
+  population?: number | null;
   website?: string;
   total_schools?: number;
   total_students?: number;
@@ -89,4 +89,9 @@ export interface StatsData {
   totalContacts: number;
   totalAgencies: number;
   dailyLimit: number;
+}
+
+export interface NavbarProps {
+  collapsed: boolean;
+  setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
 }

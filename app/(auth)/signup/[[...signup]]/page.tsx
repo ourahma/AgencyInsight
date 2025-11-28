@@ -45,8 +45,8 @@ export default function SignUpPage() {
             routing="path"
             path="/signup"
             signInUrl="/login"
-            signUpFallbackRedirectUrl="/"
-            signUpForceRedirectUrl="/"
+            fallbackRedirectUrl="/"
+            forceRedirectUrl="/"
             appearance={{
               elements: {
                 rootBox: "w-full",

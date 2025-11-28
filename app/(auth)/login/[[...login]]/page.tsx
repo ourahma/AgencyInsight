@@ -1,6 +1,7 @@
 "use client";
 
 import { SignIn } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function LoginPage() {
   return (
@@ -43,8 +44,8 @@ export default function LoginPage() {
             routing="path"
             path="/login"
             signUpUrl="/signup"
+            fallbackRedirectUrl="/"
             forceRedirectUrl="/"
-            signUpFallbackRedirectUrl="/"
             appearance={{
               elements: {
                 rootBox: "w-full",
@@ -63,12 +64,12 @@ export default function LoginPage() {
         {/* Footer */}
         <p className="text-center text-sm text-gray-600">
           Vous n'avez pas compte?{" "}
-          <a
+          <Link
             href="/signup"
             className="text-indigo-600 hover:text-indigo-700 font-medium"
           >
             Créer le gratuitement.
-          </a>
+          </Link>
         </p>
       </div>
 
